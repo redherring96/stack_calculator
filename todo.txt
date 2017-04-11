@@ -1,0 +1,5 @@
+TODO: get calculation function from JAKcode
+TODO: merge files to create one program
+TODO: implement balance_stack function to check whether input has balanced parenthesis
+TODO: write infix-to-postfix conversion function
+TODO: convert existing code to use postfix notation to calculate
