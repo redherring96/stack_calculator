@@ -58,4 +58,22 @@ void scanString(string input){
 		
 	}
 }
+//Evaluating an Arithmetic Expression (on post-fix)
+int pop(char i,int l,int k)
+{
+switch
+{
+case  '+';
+return l + k;
+case '-'
+return l - k;
+case '*'
+return l*k
+case '/'
+if (l == 0)
+throw new
+UnsupportedOperationException("Cannot Divide by Zero");
+return k/l
+}
+}
 
