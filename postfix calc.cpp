@@ -4,17 +4,27 @@
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>
+#include <math.h>
 using namespace std;
+double power(double fst, double lst){
+	double value = fst;
+	cout << fst << " " << lst;
+	for(int i = 0; i < lst -1; i++){
+		value *= fst;
+	}
+	return value;
+}
 
 bool isOperator(char op){
-	string opStr = "*-+/%";
+	string opStr = "*-+/%^";
 	for(int i =0; i<opStr.length(); i++){
 		if(op==opStr[i]){
-			cout << op;
+			//cout << op;
 			return true;
-			break;
+			//break;
 		}
 	}
+	
 	return false;
 }
 double doExpression(char op, double lst, double fst){
@@ -22,14 +32,12 @@ double doExpression(char op, double lst, double fst){
 		case '*': {return lst*fst; break;}
 		case '-': {return fst - lst; break;}
 		case '/': {return fst / lst; break;}
-		case '%': //{return fst % lst; break;}
+		case '^': {double val = power(fst, lst); return val; break;}
 		default: {return fst + lst; break;}
 	}
 }
 double evaluatePFexpression(string input){
 	stack<double> stk;
-	stk.push(1);
-	stk.push(2); 
 	for(int i = 0; i < input.length(); i++){
 		if(isOperator(input[i])){
 			if(stk.empty()){
@@ -41,10 +49,12 @@ double evaluatePFexpression(string input){
 				num2 = stk.top();
 				stk.pop();
 				stk.push(doExpression(input[i], num1, num2));
+			//	cout << num1 << " lst" << endl;
+			//	cout << num2 << 
 			}
 			
 		}
-		/**else if(isdigit(input[i])){
+		else if(isdigit(input[i])){
 			int pos = i + 1;
 			int size = 1;
 			while(isdigit(input[pos])){
@@ -52,25 +62,26 @@ double evaluatePFexpression(string input){
 				size++;
 			}
 			string temp;
-			//temp.resize(size);
 			temp.append(input.substr(i, size));
-			//temp.erase(remove(input.begin(), input.end(), " "),input.end());
 			double tempD = atof(temp.c_str());
-			cout << "temp:"<< temp;
-			cout << "tempD: "<<tempD;
 			stk.push(atof(temp.c_str()));
-		}**/
+			i = pos;
+		}
 	}
 	return stk.top();
-	
 }
 
 
 int main(){
 	string userInput;
 	cout << "please input postfix string"<<endl;
-	cin >> userInput;
-	cout << "= " << evaluatePFexpression(userInput) << endl;
+	getline(cin, userInput);
+	try{
+		cout << "= " << evaluatePFexpression(userInput) << endl;	
+	}
+	catch(string exceptionString){
+		cout << exceptionString << endl;
+	}
 	
 	return 0;
 }
