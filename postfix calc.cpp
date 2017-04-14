@@ -8,7 +8,7 @@
 using namespace std;
 double power(double fst, double lst){
 	double value = fst;
-	cout << fst << " " << lst;
+	//cout << fst << " " << lst;
 	for(int i = 0; i < lst -1; i++){
 		value *= fst;
 	}
@@ -27,6 +27,18 @@ bool isOperator(char op){
 	
 	return false;
 }
+
+bool isFunction(string input){
+	int index = 0;
+	if(isalpha(input[index])){
+		switch(input[index]){
+			case 's':{if(input == "sqrt"){return true;}else if(input == "sin"){return true;};break;}
+			case 'c':{if(input == "cos"){return true;} break;}
+			default: {return false; break;}
+		}
+	}
+}
+
 double doExpression(char op, double lst, double fst){
 	switch(op){
 		case '*': {return lst*fst; break;}
@@ -34,6 +46,28 @@ double doExpression(char op, double lst, double fst){
 		case '/': {return fst / lst; break;}
 		case '^': {double val = power(fst, lst); return val; break;}
 		default: {return fst + lst; break;}
+	}
+}
+double doFunction(string func, double var){
+	const double pi = 3.14159265;
+	switch(func[0]){
+		case 's': {
+		if(func[1] == 'q'){
+			return sqrt(var);
+			break;
+		}else if(func[1] == 'i'){
+			return sin((var * pi)/180);
+		}
+			break;
+		}	
+		case 'c': {
+			return cos((var*pi)/180);
+			break;
+		}
+	/**	case "sqrt":{
+			return sqrt(var);
+			break;
+		}**/
 	}
 }
 double evaluatePFexpression(string input){
@@ -53,7 +87,7 @@ double evaluatePFexpression(string input){
 			//	cout << num2 << 
 			}
 			
-		}
+		}		
 		else if(isdigit(input[i])){
 			int pos = i + 1;
 			int size = 1;
@@ -67,6 +101,42 @@ double evaluatePFexpression(string input){
 			stk.push(atof(temp.c_str()));
 			i = pos;
 		}
+		else if(isalpha(input[i])){
+			int pos = i + 1;
+			int size = 1;
+			while(isalpha(input[pos]) && input[pos] != '('){
+				pos++;
+				size++;
+			}
+			
+			string temp;
+			temp.append(input.substr(i, size));
+			string temp2;
+			if(isFunction(temp)){
+				size = 0;
+				while(input[pos] != ')' && pos != input.length()){
+					if(input[pos] == '('){
+						pos++;
+					}else{
+						if(isdigit(input[pos])){
+							size++;
+							i = pos;
+							pos++;
+						}
+					}
+				}
+				pos++;
+				temp2.append(input.substr(i, size));
+				double tempD = atof(temp2.c_str());
+				stk.push(doFunction(temp, tempD));
+				
+			}
+			//double tempD = atof(temp.c_str());
+			//stk.push(atof(temp.c_str()));
+			i = pos;
+			
+		}
+
 	}
 	return stk.top();
 }
@@ -74,14 +144,35 @@ double evaluatePFexpression(string input){
 
 int main(){
 	string userInput;
+	string q;
+	bool exit = false;
+try{
+	
+	while(!exit){
+	
 	cout << "please input postfix string"<<endl;
 	getline(cin, userInput);
-	try{
-		cout << "= " << evaluatePFexpression(userInput) << endl;	
+	cout << "= " << evaluatePFexpression(userInput) << endl;
+	cout << "press \'q\' to quit or any other button to input another expression" << endl;
+	cout << "? ";
+	cin >> q;
+	if(q == "q"){
+		exit = true;
+	}else{
+		exit = false;
+		userInput = "";
+		cin.clear();
+		cin.ignore(10000, '\n');
 	}
-	catch(string exceptionString){
-		cout << exceptionString << endl;
+	
+	
 	}
+}
+catch(string exceptionString){
+	cout << exceptionString << endl;
+}
+		
+
 	
 	return 0;
 }
